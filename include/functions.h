@@ -4,6 +4,7 @@
 #include "game/objects/object.h"
 #include "sys/scheduler.h"
 #include "libc/stdarg.h"
+#include "unktypes.h"
 
 void bootproc(void);
 void idle(void * arg);
@@ -48,8 +49,6 @@ void dl_apply_geometry_mode(Gfx **gdl);
 
 u8 func_8001EBE0();
 void func_800142A0(f32 arg0, f32 arg1, f32 arg2);
-s32 func_8000F44C();
-void set_menu_page(s32);
 void func_8001442C();
 s8 func_80048498();
 void set_textures_on_gdl(Gfx **gdl, Texture *tex0, Texture *tex1, u32 flags, s32 level, u32 force, u32 setModes);
@@ -58,6 +57,7 @@ void func_80002130(s32 *ulx, s32 *uly, s32 *lrx, s32 *lry);
 s16 func_80004A4C();
 void dl_apply_combine(Gfx **gdl);
 void dl_set_fill_color(Gfx **gdl, u32 color);
+void dl_set_prim_color(Gfx **gdl, u8 r, u8 g, u8 b, u8 a);
 void func_80002490(Gfx **gdl);
 void dl_apply_other_mode(Gfx **gdl);
 
@@ -87,5 +87,31 @@ void func_8004A67C();
 
 void dl_set_all_dirty();
 void func_8003DB5C();
+
+void draw_pause_screen_freeze_frame(Gfx** gdl);
+
+void func_8000E7D8(s32);
+s8 func_8001441C(void);
+
+void func_8000DAA4(UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32);
+void func_8000DC0C(UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32);
+void func_8000DB50(UNK_TYPE_32, UNK_TYPE_32);
+void func_8000E49C(UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, char *, UNK_TYPE_32, UNK_TYPE_32);
+void func_8000EF18(Gfx **gdl, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32);
+
+void func_8000CB00(UNK_TYPE_32);
+
+void func_80014B1C(void);
+void func_80014B6C(void);
+void func_800141A4(s32, s32, s32, s32);
+
+void func_80037A14(Gfx**, UNK_PTR **, s32);
+
+UNK_TYPE_32 func_8000E9D8(UNK_TYPE_32);
+void func_8000DC54(UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32);
+void func_8003825C(Gfx **gdl, Texture*, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, s32, UNK_TYPE_32);
+void func_8000EA04(UNK_TYPE_32);
+
+void func_800379D0(u32 red, u32 green, s32 blue);
 
 #endif //_FUNCTIONS_H

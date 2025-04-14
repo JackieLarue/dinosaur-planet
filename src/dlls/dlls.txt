@@ -1,9 +1,12 @@
 # engine
 16 = engine/16
 21 = engine/21_gametext
+28 = engine/28_screen_fade
 29 = engine/29_gplay
 30 = engine/30_task
 31 = engine/31_flash
+60 = engine/60
+61 = engine/61
 82 = engine/82
 83 = engine/83
 

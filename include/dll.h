@@ -2,10 +2,13 @@
 #define _DLL_H
 
 #include "dlls/engine/2_camera.h"
+#include "dlls/engine/6_amsfx.h"
 #include "dlls/engine/21_gametext.h"
+#include "dlls/engine/28_screen_fade.h"
 #include "dlls/engine/29_gplay.h"
 #include "dlls/engine/30_task.h"
 #include "dlls/engine/31_flash.h"
+#include "dlls/engine/76.h"
 
 #include "dll_def.h"
 #include "types.h"
@@ -30,6 +33,7 @@ enum DLL_ID {
     DLL_SUBTITLES = 22,
     DLL_WATERFX   = 24,
     DLL_CURVES    = 26,
+    DLL_SCREEN_FADE = 28,
     DLL_GPLAY     = 29,
     DLL_TASK      = 30,
     DLL_FLASH     = 31,
@@ -44,12 +48,13 @@ enum DLL_ID {
 // their global variable instead of from loading the DLL.
 
 extern DLLInst_2_Camera *gDLL_Camera;
+extern DLLInst_6_AMSFX *gDLL_AMSFX;
 extern DLLInst_21_gametext *gDLL_21_gametext;
+extern DLLInst_28_screen_fade *gDLL_28_screen_fade;
 extern DLLInst_29_gplay *gDLL_29_gplay;
 extern DLLInst_30_task *gDLL_30_task;
 extern DLLInst_31_flash *gDLL_31_flash;
 extern DLLInst_Unknown
-    *gDLL_28,
     *gDLL_ANIM,
     *gDLL_Sky,
     *gDLL_8,
@@ -60,7 +65,6 @@ extern DLLInst_Unknown
     *gDLL_Race,
     *gDLL_AMSEQ,
     *gDLL_AMSEQ2,
-    *gDLL_AMSFX,
     *gDLL_newlfx,
     *gDLL_57,
     *gDLL_58,
@@ -80,10 +84,14 @@ extern DLLInst_Unknown
     *gDLL_75,
     *gDLL_27,
     *gDLL_56,
-    *gDLL_76,
     *gDLL_32,
     *gDLL_33,
     *gDLL_minimap,
     *gDLL_54;
+
+    
+// Other common DLLs that aren't always loaded but are accessed globally
+
+extern DLLInst_76 *gDLL_76;
 
 #endif //_DLL_H

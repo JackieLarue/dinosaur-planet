@@ -1,9 +1,11 @@
 #include <PR/ultratypes.h>
 
+#include "dlls/engine/28_screen_fade.h"
 #include "game/objects/object.h"
 #include "sys/dll.h"
 #include "sys/math.h"
 #include "sys/fs.h"
+#include "sys/menu.h"
 #include "variables.h"
 #include "functions.h"
 #include "dll.h"
@@ -391,11 +393,11 @@ static void gplay_func_D94() {
         bss_10.unk0.unk0x16d4[bss_10.unk0.unk0.unk0.character].vec.y,
         bss_10.unk0.unk0x16d4[bss_10.unk0.unk0.unk0.character].vec.z);
     
-    if (func_8000F44C() != 4) {
-        set_menu_page(1);
+    if (menu_get_current() != MENU_4) {
+        menu_set(MENU_1);
     }
 
-    gDLL_28->exports->func[2].withTwoArgs(0x28, 1);
+    gDLL_28_screen_fade->exports->fade_reversed(40, SCREEN_FADE_BLACK);
 }
 
 GplayStruct7 *gplay_func_E74() {
