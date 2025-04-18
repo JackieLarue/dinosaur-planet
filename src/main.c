@@ -1,5 +1,6 @@
 #include "common.h"
-#include <PR/sched.h>
+#include "PR/os.h"
+#include "PR/sched.h"
 #include "dll.h"
 #include "sys/rarezip.h"
 #include "sys/menu.h"
@@ -124,7 +125,7 @@ void game_init(void)
         gDLL_projgfx   = dll_load_deferred(DLL_PROJGFX, 8);
         gDLL_16        = dll_load_deferred(16, 3);
         gDLL_17        = dll_load_deferred(17, 2); //probably particle FX
-        gDLL_SCREENS   = dll_load_deferred(DLL_SCREENS, 3);
+        gDLL_20_screens = dll_load_deferred(DLL_SCREENS, 3);
         gDLL_21_gametext = dll_load_deferred(DLL_TEXT, 5);
         gDLL_subtitles = dll_load_deferred(DLL_SUBTITLES, 7);
         gDLL_waterfx   = dll_load_deferred(DLL_WATERFX, 7);
@@ -162,7 +163,6 @@ void game_init(void)
 void dl_add_debug_info(Gfx *gdl, u32 param_2, char *file, u32 param_4);
 void dl_next_debug_info_set();                         /* extern */
 void dl_segment(Gfx **gdl, u32 segment, void *base);
-void func_80001A3C();                                  /* extern */
 void func_80007178();                                  /* extern */
 void func_800121DC();                                  /* extern */
 void func_800129E4();                                  /* extern */
@@ -173,7 +173,6 @@ void func_80037EC8(Gfx**);                             /* extern */
 void func_8003E9F0(Gfx**, u8);                         /* extern */
 s32 func_80041D5C();                                /* extern */
 s32 func_80041D74();                                /* extern */
-void tick_cameras();                                   /* extern */
 void update_mem_mon_values();                          /* extern */
 u8 video_func_returning_delay(s32);                   /* extern */
 extern s32 D_80099130;
@@ -231,7 +230,7 @@ void game_tick(void)
     func_800121DC();
     gDLL_28_screen_fade->exports->draw(tmp_s0, &gCurMtx, &gCurVtx);
     gDLL_subtitles->exports->func[6].withOneArg(tmp_s0);
-    tick_cameras();
+    camera_tick();
     func_800129E4();
     diPrintfAll(tmp_s0); 
 
@@ -242,7 +241,7 @@ void game_tick(void)
     obj_do_deferred_free();
     update_mem_mon_values();
     
-    if (D_800B09C2 == 0) {
+    if (gPauseState == 0) {
         func_80001A3C();
     }
 
@@ -318,7 +317,6 @@ void game_tick_no_expansion(void)
     inverseDelayMirror = 1.0f / delayFloatMirror;
 }
 
-s32 func_80001A2C();                                /* extern */
 s8 func_800143FC();                                /* extern */
 void func_800210DC();                                  /* extern */
 void func_80042174(s32);                                 /* extern */
@@ -338,7 +336,7 @@ void func_80013D80(void)
 {
     s32 button;
 
-    set_button_mask(0, 0x900);
+    set_button_mask(0, U_JPAD | R_JPAD);
     gDLL_Camera->exports->func19.asVoid();
     gDLL_subtitles->exports->func[5].asVoid();
 
@@ -346,19 +344,19 @@ void func_80013D80(void)
     {
         button = get_masked_button_presses(0);
 
-        if (D_800B09C2 != 0) {
+        if (gPauseState != 0) {
             draw_pause_screen_freeze_frame(&gCurGfx);
         }
 
-        if (D_800B09C2 == 0)
+        if (gPauseState == 0)
         {
             update_objects();
             func_80042174(0);
 
-            if ((func_80001A2C() == 0) && (D_8008C94C == 0) && (func_800143FC() == 0) && ((button & 0x1000) != 0) && (get_gplay_bitstring(1103) == 0))
+            if ((func_80001A2C() == 0) && (D_8008C94C == 0) && (func_800143FC() == 0) && ((button & START_BUTTON) != 0) && (get_gplay_bitstring(1103) == 0))
             {
-                D_800B09C2 = 1;
-                set_button_mask(0, 0x1000);
+                gPauseState = 1;
+                set_button_mask(0, START_BUTTON);
                 menu_set(MENU_8);
             }
             
@@ -368,7 +366,7 @@ void func_80013D80(void)
             update_obj_models();
         }
         
-        if (D_800B09C2 == 0) {
+        if (gPauseState == 0) {
             update_PlayerPosBuffer();
         }
 
@@ -380,11 +378,11 @@ void func_80013D80(void)
 
         gDLL_Race->exports->func[14].asVoid();
 
-        if (D_800B09C2 == 0) {
+        if (gPauseState == 0) {
             func_8004225C(&gCurGfx, &gCurMtx, &gCurVtx, &gCurPol, &gCurVtx, &gCurPol);
         }
 
-        gDLL_SCREENS->exports->func[2].withOneArg(&gCurGfx);
+        gDLL_20_screens->exports->draw(&gCurGfx);
         menu_draw(&gCurGfx, &gCurMtx, &gCurVtx, &gCurPol);
 
         D_8008C94C -= delayByte;
@@ -403,13 +401,12 @@ void func_80013FB4(void) {
     gDLL_AMSEQ->exports->func[6].withOneArg(0);
     gDLL_AMSEQ->exports->func[6].withOneArg(1);
     gDLL_subtitles->exports->func[4].asVoid();
-    func_8001442C();
+    unpause();
     func_800141A4(1, 0, 1, -1);
 }
 
 extern s32 D_8008C968;
 extern u8 D_8008CA30;
-void func_80001220();                                  /* extern */
 void func_80017254(s32);                                 /* extern */
 void func_8003798C(s32, s32, s32);                           /* extern */
 void func_8004773C();                                  /* extern */
@@ -435,7 +432,7 @@ void func_80014074(void)
         ossceduler_stack = 0;
         
         func_80017254(0);
-        func_80001220();
+        camera_init();
 
         if (D_8008C968 >= 0) {
             menu_set(D_8008C968);
@@ -519,16 +516,16 @@ void func_8001440C(s32 arg0) {
     D_8008C940 = arg0;
 }
 
-s8 func_8001441C(void) {
-    return D_800B09C2;
+s8 get_pause_state(void) {
+    return gPauseState;
 }
 
-void func_8001442C(void) {
-    D_800B09C2 = 0;
+void unpause(void) {
+    gPauseState = 0;
 }
 
-void func_8001443C(s32 arg0) {
-    D_800B09C2 = arg0;
+void set_pause_state(s32 state) {
+    gPauseState = state;
 }
 
 #define MAIN_GFX_BUF_SIZE 0x8CA0

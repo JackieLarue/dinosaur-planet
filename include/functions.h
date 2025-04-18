@@ -2,6 +2,7 @@
 #define _FUNCTIONS_H
 
 #include "game/objects/object.h"
+#include "sys/camera.h"
 #include "sys/scheduler.h"
 #include "libc/stdarg.h"
 #include "unktypes.h"
@@ -29,8 +30,6 @@ void stop_alSyn_thread();
 
 OSSched *get_ossched(void);
 
-void transform_point_by_object(f32 x, f32 y, f32 z, f32 *ox, f32 *oy, f32 *oz, Object *obj);
-
 void update_pi_manager_array(s32 index, s32 value);
 
 void write_c_file_label_pointers(char *cFileLabel, s32 a1);
@@ -49,19 +48,13 @@ void dl_apply_geometry_mode(Gfx **gdl);
 
 u8 func_8001EBE0();
 void func_800142A0(f32 arg0, f32 arg1, f32 arg2);
-void func_8001442C();
 s8 func_80048498();
 void set_textures_on_gdl(Gfx **gdl, Texture *tex0, Texture *tex1, u32 flags, s32 level, u32 force, u32 setModes);
 
-void func_80002130(s32 *ulx, s32 *uly, s32 *lrx, s32 *lry);
-s16 func_80004A4C();
 void dl_apply_combine(Gfx **gdl);
 void dl_set_fill_color(Gfx **gdl, u32 color);
 void dl_set_prim_color(Gfx **gdl, u8 r, u8 g, u8 b, u8 a);
-void func_80002490(Gfx **gdl);
 void dl_apply_other_mode(Gfx **gdl);
-
-void get_object_child_position(Object *obj, float *ox, float *oy, float *oz);
 
 s16 map_get_map_id_from_xz_ws(f32 arg0, f32 arg1);
 
@@ -73,8 +66,6 @@ u32 func_8002667C(Object *obj, u32 addr);
 u32 func_80026BD8(Object *obj, u32 addr);
 
 u32 func_80026A20(s16 objId, ModelInstance*, ObjectHitInfo*, u32, Object*);
-
-f32 func_80003A60(f32, f32, f32);
 
 
 void func_80045F48(s32);
@@ -91,7 +82,10 @@ void func_8003DB5C();
 void draw_pause_screen_freeze_frame(Gfx** gdl);
 
 void func_8000E7D8(s32);
-s8 func_8001441C(void);
+
+s8 get_pause_state(void);
+void unpause();
+void set_pause_state(s32 state);
 
 void func_8000DAA4(UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32);
 void func_8000DC0C(UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32);
@@ -113,5 +107,23 @@ void func_8003825C(Gfx **gdl, Texture*, UNK_TYPE_32, UNK_TYPE_32, UNK_TYPE_32, U
 void func_8000EA04(UNK_TYPE_32);
 
 void func_800379D0(u32 red, u32 green, s32 blue);
+
+void func_8003CD6C(s32);
+
+void func_80046B58(f32 x, f32 y, f32 z);
+s32 func_8004454C(f32 x, f32 y, f32 z);
+
+void convert_mtxf_to_mtx_in_pool(MatrixSlot *);
+
+void func_8005BBF0(u32 arg0);
+void func_80052DC0(u32* arg0, u32 arg1, u32 arg2, s32 arg3);
+void func_800529C0(u32* arg0, u32 arg1);
+
+/**
+ * If param1 isn't null, sets it to gPossiblyScreenWidthOrHeight.
+ *
+ * Returns gSomeVideoFlag.
+ */
+int func_8005BC38(s32*);
 
 #endif //_FUNCTIONS_H
